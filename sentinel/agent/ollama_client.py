@@ -29,7 +29,7 @@ class ResilientOllamaClient:
     """
 
     def __init__(self, base_url: str = OLLAMA_BASE_URL) -> None:
-        self._async_client = ollama.AsyncClient(host=base_url)
+        self._async_client = ollama.AsyncClient(host=base_url, timeout=LLM_TIMEOUT_SECONDS)
 
     @retry(
         retry=retry_if_exception_type((ConnectionError, TimeoutError, ollama.ResponseError)),
@@ -39,32 +39,23 @@ class ResilientOllamaClient:
     )
     async def _chat_with_retry(self, *args: Any, **kwargs: Any) -> Any:
         """Asynchronous chat helper with retry decorators."""
-        # Enforce timeout from config (Finding #34)
-        kwargs.setdefault("timeout", LLM_TIMEOUT_SECONDS)
         return await self._async_client.chat(*args, **kwargs)
 
     async def chat(self, model: str, messages: list[dict[str, str]], **kwargs: Any) -> dict[str, Any]:
         """
         Executes a chat completion call with circuit breaker and retry protections.
         """
+        state = _llm_breaker.state
+        state.before_call(self._chat_with_retry, model=model, messages=messages, **kwargs)
+        for listener in _llm_breaker.listeners:
+            listener.before_call(_llm_breaker, self._chat_with_retry, model=model, messages=messages, **kwargs)
+            
         try:
-            # CircuitBreaker.call is synchronous, but we can call it around an async function
-            # by executing the coroutine. In Python, pybreaker supports async wrappers or we can
-            # wrap the call manually:
-            if not _llm_breaker.current_state == "closed" and _llm_breaker.current_state != "half-open":
-                raise RuntimeError("Ollama LLM Circuit Breaker is TRIP / OPEN. Rejecting request.")
-                
-            # Execute within breaker
-            # pybreaker tracks failures by catching exceptions raised within the call block
-            try:
-                response = await self._chat_with_retry(model=model, messages=messages, **kwargs)
-                _llm_breaker.success()
-                return response
-            except Exception as e:
-                _llm_breaker.handle_failure(e)
-                raise e
-        except Exception as e:
-            logger.error(f"Ollama chat execution failed: {e}")
+            response = await self._chat_with_retry(model=model, messages=messages, **kwargs)
+            state._handle_success()
+            return response
+        except BaseException as e:
+            state._handle_error(e)
             raise e
 
     async def chat_stream(self, model: str, messages: list[dict[str, str]], **kwargs: Any) -> AsyncGenerator[dict[str, Any], None]:
@@ -73,7 +64,6 @@ class ResilientOllamaClient:
         """
         # Ensure we set stream=True
         kwargs["stream"] = True
-        kwargs.setdefault("timeout", LLM_TIMEOUT_SECONDS)
         
         try:
             generator = await self._async_client.chat(model=model, messages=messages, **kwargs)

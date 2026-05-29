@@ -39,7 +39,7 @@ logger = logging.getLogger("sentinel.eval")
 
 async def evaluate_crisis_detection(crisis_path: Path) -> dict[str, Any]:
     """Evaluates the crisis detector accuracy, precision, and recall."""
-    console.print("\n[bold teal]Evaluating Crisis Detection...[/bold teal]")
+    console.print("\n[bold cyan]Evaluating Crisis Detection...[/bold cyan]")
     
     with open(crisis_path, "r") as f:
         test_cases = json.load(f)
@@ -47,6 +47,7 @@ async def evaluate_crisis_detection(crisis_path: Path) -> dict[str, Any]:
     total = len(test_cases)
     tp_t1, fp_t1, fn_t1, tn_t1 = 0, 0, 0, 0
     tp_t2, fp_t2, fn_t2, tn_t2 = 0, 0, 0, 0
+    tp_any, fp_any, fn_any = 0, 0, 0
     correct = 0
     
     for case in test_cases:
@@ -83,16 +84,21 @@ async def evaluate_crisis_detection(crisis_path: Path) -> dict[str, Any]:
             else:
                 tn_t2 += 1
 
+        # Overall crisis (any crisis vs none) confusion matrix
+        if expected in ("TIER_1", "TIER_2"):
+            if predicted in ("TIER_1", "TIER_2"):
+                tp_any += 1
+            else:
+                fn_any += 1
+        else:
+            if predicted in ("TIER_1", "TIER_2"):
+                fp_any += 1
+
     t1_recall = tp_t1 / (tp_t1 + fn_t1) if (tp_t1 + fn_t1) > 0 else 1.0
     t1_precision = tp_t1 / (tp_t1 + fp_t1) if (tp_t1 + fp_t1) > 0 else 1.0
     
     t2_recall = tp_t2 / (tp_t2 + fn_t2) if (tp_t2 + fn_t2) > 0 else 1.0
     t2_precision = tp_t2 / (tp_t2 + fp_t2) if (tp_t2 + fp_t2) > 0 else 1.0
-    
-    # Combined precision for any crisis (TIER_1 or TIER_2) vs NONE
-    tp_any = sum(1 for c in test_cases if c["crisis_level_expected"] in ("TIER_1", "TIER_2") and (await detect_crisis(c["query"])).level in ("TIER_1", "TIER_2"))
-    fp_any = sum(1 for c in test_cases if c["crisis_level_expected"] == "NONE" and (await detect_crisis(c["query"])).level in ("TIER_1", "TIER_2"))
-    fn_any = sum(1 for c in test_cases if c["crisis_level_expected"] in ("TIER_1", "TIER_2") and (await detect_crisis(c["query"])).level == "NONE")
     
     overall_recall = tp_any / (tp_any + fn_any) if (tp_any + fn_any) > 0 else 1.0
     overall_precision = tp_any / (tp_any + fp_any) if (tp_any + fp_any) > 0 else 1.0
@@ -126,7 +132,7 @@ async def evaluate_crisis_detection(crisis_path: Path) -> dict[str, Any]:
 
 async def evaluate_golden_dataset(golden_path: Path, client: ResilientOllamaClient) -> dict[str, Any]:
     """Runs the 50 mhGAP golden QA queries, checking intents, citations, and NLI faithfulness."""
-    console.print("\n[bold teal]Evaluating Golden mhGAP Dataset...[/bold teal]")
+    console.print("\n[bold cyan]Evaluating Golden mhGAP Dataset...[/bold cyan]")
     
     with open(golden_path, "r") as f:
         dataset = json.load(f)
@@ -278,7 +284,7 @@ async def evaluate_golden_dataset(golden_path: Path, client: ResilientOllamaClie
 
 async def evaluate_adversarial_probes(adversarial_path: Path, client: ResilientOllamaClient) -> dict[str, Any]:
     """Runs adversarial probes (unsupported meds, superseded rules, non-English, PHI)."""
-    console.print("\n[bold teal]Evaluating Adversarial Probes...[/bold teal]")
+    console.print("\n[bold cyan]Evaluating Adversarial Probes...[/bold cyan]")
     
     with open(adversarial_path, "r") as f:
         probes = json.load(f)
@@ -400,7 +406,7 @@ async def main():
     console.print(Panel.fit(
         "[bold green]SENTINEL Automated Evaluation Harness[/bold green]\n"
         "Initializing local LLM connection & running benchmark test suites...",
-        border_style="teal"
+        border_style="cyan"
     ))
     
     client = ResilientOllamaClient()

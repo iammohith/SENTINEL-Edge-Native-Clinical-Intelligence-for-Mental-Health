@@ -104,7 +104,7 @@ def escalate_query(session_id: str, scrubbed_query: str, reason: str) -> str:
                 INSERT INTO escalations (escalation_id, session_id, scrubbed_query, reason)
                 VALUES (?, ?, ?, ?)
                 """,
-                (escalation_id, scrubbed_query[:500], reason)  # Cap size to be safe
+                (escalation_id, session_id, scrubbed_query[:500], reason)  # Cap size to be safe
             )
         logger.warning(f"CLINICAL ESCALATION: Session '{session_id}' escalated. ID: {escalation_id}. Reason: {reason}")
         return escalation_id

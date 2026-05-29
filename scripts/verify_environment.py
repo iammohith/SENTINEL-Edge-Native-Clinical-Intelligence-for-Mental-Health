@@ -195,14 +195,26 @@ else:
                 row_count = tbl.count_rows()
                 try:
                     stats = tbl.index_stats("embedding")
-                    unindexed = stats.num_unindexed_rows
-                    if unindexed == 0:
-                        ok(f"Table '{tname}': {row_count} rows, ANN index current (0 unindexed)")
+                    if stats is not None:
+                        unindexed = stats.num_unindexed_rows
+                        if unindexed == 0:
+                            ok(f"Table '{tname}': {row_count} rows, ANN index current (0 unindexed)")
+                        else:
+                            warn(
+                                f"Table '{tname}': {unindexed} unindexed rows — ANN index stale",
+                                fix="Run: sentinel ingest --reindex   to rebuild",
+                            )
                     else:
-                        warn(
-                            f"Table '{tname}': {unindexed} unindexed rows — ANN index stale",
-                            fix="Run: sentinel ingest --reindex   to rebuild",
-                        )
+                        # Fallback: check list_indices
+                        indices = tbl.list_indices()
+                        has_vector_idx = any("embedding" in getattr(idx, "columns", []) for idx in indices)
+                        if has_vector_idx:
+                            ok(f"Table '{tname}': {row_count} rows, ANN index built (stats unavailable)")
+                        else:
+                            warn(
+                                f"Table '{tname}': ANN index not built yet",
+                                fix="Run ingestion pipeline to build index",
+                            )
                 except Exception:
                     warn(
                         f"Table '{tname}': ANN index not built yet",
