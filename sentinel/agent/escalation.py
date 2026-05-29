@@ -17,7 +17,7 @@ import logging
 import sqlite3
 import uuid
 from dataclasses import dataclass
-from typing import ClassVar
+from typing import Any, ClassVar
 
 from sentinel.audit.key_manager import get_sqlcipher_key
 from sentinel.config import AUDIT_DB_PATH

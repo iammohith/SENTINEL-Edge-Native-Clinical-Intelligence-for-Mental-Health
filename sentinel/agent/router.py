@@ -8,6 +8,7 @@ Handles comorbidity and multi-condition queries by merging and reranking (Findin
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import Any
 
@@ -76,5 +77,3 @@ async def route_and_retrieve(
     )
     
     return final_chunks
-
-import asyncio  # Ensure imported in module namespace

@@ -26,7 +26,6 @@ _init_lock = threading.Lock()
 def _get_analyzer() -> AnalyzerEngine:
     global _analyzer_instance
     if _analyzer_instance is None:
-        import threading
         with _init_lock:
             if _analyzer_instance is None:
                 logger.info("Initializing Microsoft Presidio Analyzer Engine...")
@@ -37,7 +36,6 @@ def _get_analyzer() -> AnalyzerEngine:
 def _get_anonymizer() -> AnonymizerEngine:
     global _anonymizer_instance
     if _anonymizer_instance is None:
-        import threading
         with _init_lock:
             if _anonymizer_instance is None:
                 logger.info("Initializing Microsoft Presidio Anonymizer Engine...")
@@ -54,7 +52,6 @@ def scrub_phi(text: str) -> tuple[str, list[str]]:
     Returns:
         A tuple of (scrubbed_text, detected_entity_types).
     """
-    import threading  # Ensure imported
     
     if not text.strip():
         return text, []

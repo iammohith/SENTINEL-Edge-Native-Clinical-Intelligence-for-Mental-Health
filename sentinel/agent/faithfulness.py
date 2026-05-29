@@ -50,7 +50,6 @@ def _get_nli_model() -> CrossEncoder:
     """Thread-safe lazy initializer for the NLI cross-encoder."""
     global _nli_model
     if _nli_model is None:
-        import threading
         with _nli_lock:
             if _nli_model is None:
                 logger.info("Loading NLI cross-encoder model (cross-encoder/nli-MiniLM2-L6-H768)...")
@@ -86,7 +85,6 @@ async def check_faithfulness(
     
     Pairs are structured as (PREMISE, HYPOTHESIS) -> (chunk, sentence) (Finding #25).
     """
-    import threading  # Ensure imported
     import re
     
     if not answer_sentences:

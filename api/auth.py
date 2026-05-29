@@ -25,7 +25,6 @@ _token_lock = threading.Lock()
 def get_or_create_session_token() -> str:
     """Generates the active session token on first load or returns the existing one."""
     global _active_session_token
-    import threading
     if _active_session_token is None:
         with _token_lock:
             if _active_session_token is None:
@@ -38,7 +37,6 @@ def get_or_create_session_token() -> str:
 def reset_session_token() -> str:
     """Regenerates a new session token, invalidating the previous one."""
     global _active_session_token
-    import threading
     with _token_lock:
         _active_session_token = secrets.token_hex(32)
         logger.info("Session token has been rotated.")
@@ -58,5 +56,3 @@ async def verify_session_token(x_session_token: Optional[str] = Header(None)) ->
             detail="Invalid or missing session token. Please reload the dashboard."
         )
     return x_session_token
-
-import threading  # Ensure imported in module namespace

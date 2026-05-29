@@ -110,6 +110,8 @@ async function authFetch(url, options = {}) {
         console.warn("Session token invalid or expired. Reloading to obtain a new token.");
         sessionStorage.removeItem('sentinel_session_token');
         window.location.reload();
+        // Block execution so callers don't flash an error before the reload completes
+        await new Promise(() => {});
     }
     return response;
 }
@@ -421,7 +423,7 @@ function addAuditLedgerRow(step, status, details) {
 let queryAbortController = null;
 
 async function submitQuery(queryText) {
-    if (!queryText.strip) queryText = queryText.trim();
+    queryText = queryText.trim();
     if (!queryText) return;
     
     resetConsoleUI();
