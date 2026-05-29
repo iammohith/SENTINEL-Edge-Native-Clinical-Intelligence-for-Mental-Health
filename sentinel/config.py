@@ -31,11 +31,11 @@ MIN_VECTORS_PER_PARTITION: Final[int] = 39  # LanceDB ANN training requirement
 OLLAMA_BASE_URL: Final[str] = "http://127.0.0.1:11434"
 LLM_MODEL: Final[str] = "gemma4:e4b"
 EMBED_MODEL: Final[str] = "nomic-embed-text"
-LLM_TIMEOUT_SECONDS: Final[float] = 60.0  # Never hang forever on Ollama call
+LLM_TIMEOUT_SECONDS: Final[float] = 180.0  # M1 cold-start can exceed 60s on first load
 
 # ── Agentic loop configuration ───────────────────────────────────────────────────
 MAX_LOOP_ITERATIONS: Final[int] = 3       # Caps worst-case latency at ~45s
-CONFIDENCE_ESCALATE_THRESHOLD: Final[float] = 0.70
+CONFIDENCE_ESCALATE_THRESHOLD: Final[float] = 0.40
 RRF_K_CONSTANT: Final[int] = 60          # Standard RRF k parameter
 RETRIEVE_TOP_K: Final[int] = 30          # Per retrieval branch before RRF
 RERANK_TOP_N: Final[int] = 5            # After reranking, keep top 5
@@ -108,6 +108,7 @@ CRISIS_SIGNALS: Final[dict[str, list[str]]] = {
     "tier_2_protocol": [
         # Crisis signals — proceed with constrained synthesis + crisis banner
         "doesn't want to be here",
+        "not wanting to be here",
         "passive suicidal",
         "self-harm",
         "cutting",

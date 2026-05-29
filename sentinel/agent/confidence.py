@@ -33,13 +33,13 @@ def compute_confidence_score(
     # ms-marco-MiniLM-L-6-v2 outputs logit-like scores generally between -12 and 10.
     # We map this to a [0.0, 1.0] range using a sigmoid-like or linear mapping:
     # A score of >= 2.0 is highly relevant; <= -5.0 is irrelevant.
-    if max_rerank_score > 6.0:
+    if max_rerank_score > 5.0:
         normalized_rerank = 1.0
-    elif max_rerank_score < -8.0:
+    elif max_rerank_score < -15.0:
         normalized_rerank = 0.0
     else:
-        # Linear map from [-8.0, 6.0] to [0.0, 1.0]
-        normalized_rerank = (max_rerank_score + 8.0) / 14.0
+        # Linear map from [-15.0, 5.0] to [0.0, 1.0]
+        normalized_rerank = (max_rerank_score + 15.0) / 20.0
 
     # 2. Stage 1: Weighted average of primary signals
     base_score = (0.40 * intent_confidence) + (0.60 * normalized_rerank)

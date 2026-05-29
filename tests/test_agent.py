@@ -17,9 +17,8 @@ def test_confidence_scorer():
     assert score1 == 1.0
 
     # Test baseline calculation
-    # Base = 0.40 * 0.80 + 0.60 * 0.50 (normalized rerank: logit 2.0 = (2+8)/14 = 10/14 = 0.714)
-    # Let's use max_rerank_score that normalizes cleanly.
-    # If max_rerank_score = -1.0, normalized_rerank = (-1+8)/14 = 7/14 = 0.50
+    # Normalization range is [-15.0, 5.0] → linear map to [0.0, 1.0]
+    # If max_rerank_score = -1.0, normalized_rerank = (-1+15)/20 = 14/20 = 0.70
     score2 = compute_confidence_score(
         intent_confidence=0.80,
         max_rerank_score=-1.0,
@@ -27,9 +26,9 @@ def test_confidence_scorer():
         language_warning=False,
         has_clinical_alerts=False
     )
-    # Base score = (0.40 * 0.80) + (0.60 * 0.50) = 0.32 + 0.30 = 0.62
-    # Final = 0.62 * 0.90 = 0.558
-    assert pytest.approx(score2, 0.001) == 0.558
+    # Base score = (0.40 * 0.80) + (0.60 * 0.70) = 0.32 + 0.42 = 0.74
+    # Final = 0.74 * 0.90 = 0.666
+    assert pytest.approx(score2, 0.001) == 0.666
 
     # Test language warning penalty (0.80 multiplier)
     score3 = compute_confidence_score(
