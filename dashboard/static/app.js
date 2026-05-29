@@ -105,7 +105,13 @@ async function authFetch(url, options = {}) {
     if (state.sessionToken) {
         options.headers['X-Session-Token'] = state.sessionToken;
     }
-    return fetch(url, options);
+    const response = await fetch(url, options);
+    if (response.status === 401) {
+        console.warn("Session token invalid or expired. Reloading to obtain a new token.");
+        sessionStorage.removeItem('sentinel_session_token');
+        window.location.reload();
+    }
+    return response;
 }
 
 // ── Tab Management ───────────────────────────────────────────────────────────
