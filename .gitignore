@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Caches and tests
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# Project-specific database and logs (Regulated data)
+data/index/
+audit_logs/*.db
+audit_logs/*.db-wal
+audit_logs/*.db-shm
+
+# OS and IDE files
+.DS_Store
+.vscode/
+.idea/
+
+# Local test databases
+test_temp_db/
+

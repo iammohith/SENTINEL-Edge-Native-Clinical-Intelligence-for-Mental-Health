@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENTINEL — WHO mhGAP Clinical Consultation Dashboard</title>
+    
+    <!-- Premium Typography from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="dark-mode">
+    <!-- Skip Navigation Link for Accessibility -->
+    <a href="#query-input" class="skip-nav">Skip to main content</a>
+
+    <header class="app-header" role="banner">
+        <div class="header-logo">
+            <h1 class="logo-text">SENTINEL</h1>
+            <span class="logo-subtext">Clinical Intelligence Node</span>
+        </div>
+        <div class="system-status-bar" aria-label="System status">
+            <div class="status-indicator" id="status-ollama">
+                <span class="status-dot green" aria-hidden="true"></span>
+                <span class="status-label">Ollama: <span class="val">OK</span></span>
+            </div>
+            <div class="status-indicator" id="status-lancedb">
+                <span class="status-dot green" aria-hidden="true"></span>
+                <span class="status-label">LanceDB Chunks: <span class="val">0</span></span>
+            </div>
+            <div class="status-indicator" id="status-audit">
+                <span class="status-dot green" aria-hidden="true"></span>
+                <span class="status-label">Audit Chain: <span class="val">SECURE</span></span>
+            </div>
+            <div class="status-indicator" id="status-escalations">
+                <span class="status-dot" id="escalation-dot" aria-hidden="true"></span>
+                <span class="status-label">Escalations: <span class="val" id="escalation-val">0</span></span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button id="btn-clear-session" class="btn btn-secondary" aria-label="Clear session history">Clear Session</button>
+            <button id="btn-rotate-token" class="btn btn-secondary" aria-label="Rotate security token">Rotate Token</button>
+        </div>
+    </header>
+
+    <!-- Crisis Banner Panel (Hidden by default, triggered on Tier-2 or Tier-1) -->
+    <div id="crisis-alert-banner" class="crisis-banner hidden" role="alert" aria-live="assertive">
+        <div class="banner-icon" aria-hidden="true">⚠</div>
+        <div class="banner-content">
+            <h2 class="banner-title">CRISIS ALERT ACTIVE (WHO mhGAP Protocol SHI)</h2>
+            <p class="banner-desc">Acute self-harm, suicidal ideation, or withdrawal risk detected in the query. Ensure patient safety immediately. Do not leave the person alone. Assess access to lethal means.</p>
+        </div>
+    </div>
+
+    <main class="dashboard-grid" role="main">
+        
+        <!-- Left Panel: Session History and Query Console -->
+        <section class="panel panel-left" aria-labelledby="console-title">
+            <div class="panel-header">
+                <h2 id="console-title" class="panel-title">Consultation Console</h2>
+            </div>
+            
+            <div class="console-body">
+                <!-- Session History List -->
+                <div class="session-history-container" aria-label="Session History">
+                    <h3>Session History</h3>
+                    <div id="session-history" class="session-history-list" role="log">
+                        <div class="empty-history-msg">No active turns in this session yet.</div>
+                    </div>
+                </div>
+
+                <!-- Query Form -->
+                <form id="query-form" class="query-form">
+                    <div class="input-wrapper">
+                        <label for="query-input" class="sr-only">Enter clinical query</label>
+                        <textarea 
+                            id="query-input" 
+                            name="query" 
+                            placeholder="Type clinical query (e.g. '34F with low mood, poor sleep, stopped eating. Does she have depression according to mhGAP?')" 
+                            required
+                            aria-required="true"
+                            rows="4"
+                        ></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="btn-submit" class="btn btn-primary" aria-label="Submit clinical query">
+                            <span class="btn-text">Submit Query</span>
+                            <span class="loader hidden" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" id="btn-cancel" class="btn btn-danger hidden" aria-label="Cancel current generation">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Right Panel: Answer Stream and Citations -->
+        <section class="panel panel-right" aria-labelledby="answer-title">
+            <div class="panel-header">
+                <h2 id="answer-title" class="panel-title">Guideline Synthesis</h2>
+                <div class="panel-metrics" aria-label="Clinical Metrics">
+                    <!-- Confidence Meter -->
+                    <div class="metric-badge" id="metric-confidence" aria-label="Confidence score">
+                        <span class="metric-label">Confidence:</span>
+                        <span class="metric-val" id="confidence-val">--</span>
+                    </div>
+                    <!-- Faithfulness Badge -->
+                    <div class="metric-badge" id="metric-faithfulness" aria-label="Faithfulness status">
+                        <span class="metric-label">Faithfulness:</span>
+                        <span class="metric-val" id="faithfulness-val">--</span>
+                    </div>
+                    <!-- Condition Badge -->
+                    <div class="metric-badge" id="metric-condition" aria-label="Condition code">
+                        <span class="metric-label">Condition:</span>
+                        <span class="metric-val" id="condition-val">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="answer-body">
+                <!-- SSE Generation Step Timeline -->
+                <div id="step-timeline" class="step-timeline" aria-label="Reasoning steps"></div>
+
+                <!-- Main Response Box -->
+                <div class="response-container">
+                    <div id="response-box" class="response-box markdown-body" aria-live="polite">
+                        <div class="response-placeholder">Awaiting clinician query...</div>
+                    </div>
+                </div>
+
+                <!-- Citations Sidebar -->
+                <div class="citations-container" aria-label="Source Guidelines Citations">
+                    <h3>Source Citations</h3>
+                    <ul id="citations-list" class="citations-list">
+                        <li class="empty-citations-msg">No citations referenced.</li>
+                    </ul>
+                </div>
+
+                <!-- Dynamic Clinical Alerts -->
+                <div id="clinical-alerts-container" class="clinical-alerts-container hidden" aria-label="Retrieved Clinical Warnings">
+                    <h3 class="alerts-title">⚠ Critical Clinical Callouts</h3>
+                    <ul id="clinical-alerts-list" class="alerts-list"></ul>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <!-- Lower Tabs Panel: Escalations, Corpus, Audit Logs -->
+    <section class="panel lower-panel" aria-labelledby="admin-title">
+        <div class="panel-header tab-header" role="tablist">
+            <h2 id="admin-title" class="sr-only">Management Panels</h2>
+            <button class="tab-btn active" id="tab-audit" role="tab" aria-selected="true" aria-controls="panel-audit">Audit Ledger</button>
+            <button class="tab-btn" id="tab-escalations" role="tab" aria-selected="false" aria-controls="panel-escalations">Escalation Queue</button>
+            <button class="tab-btn" id="tab-corpus" role="tab" aria-selected="false" aria-controls="panel-corpus">Corpus Manager</button>
+        </div>
+
+        <div class="tab-content-container">
+            <!-- Tab 1: Audit Ledger -->
+            <div class="tab-panel active" id="panel-audit" role="tabpanel" aria-labelledby="tab-audit">
+                <div class="tab-actions">
+                    <button id="btn-verify-audit" class="btn btn-secondary" aria-label="Verify audit database signatures">Verify Ledger Integrity</button>
+                    <button id="btn-export-audit" class="btn btn-secondary" aria-label="Export session audit logs">Export Audit JSON</button>
+                </div>
+                <div class="audit-viewer-container">
+                    <table class="data-table" role="grid">
+                        <thead>
+                            <tr role="row">
+                                <th role="columnheader">Seq</th>
+                                <th role="columnheader">Timestamp</th>
+                                <th role="columnheader">Reasoning Step</th>
+                                <th role="columnheader">De-identified Query Hash</th>
+                                <th role="columnheader">Audit Signature (HMAC)</th>
+                                <th role="columnheader">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-table-body">
+                            <tr role="row"><td colspan="6" class="table-empty">No session steps logged yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 2: Escalations -->
+            <div class="tab-panel" id="panel-escalations" role="tabpanel" aria-labelledby="tab-escalations" hidden>
+                <div class="escalations-container">
+                    <table class="data-table" role="grid">
+                        <thead>
+                            <tr role="row">
+                                <th role="columnheader">Escalation ID</th>
+                                <th role="columnheader">Timestamp</th>
+                                <th role="columnheader">Scrubbed Query Preview</th>
+                                <th role="columnheader">Escalation Reason</th>
+                                <th role="columnheader">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="escalations-table-body">
+                            <tr role="row"><td colspan="5" class="table-empty">No pending escalations found.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: Corpus -->
+            <div class="tab-panel" id="panel-corpus" role="tabpanel" aria-labelledby="tab-corpus" hidden>
+                <div class="corpus-layout">
+                    <!-- Drop Zone -->
+                    <div class="drop-zone" id="pdf-drop-zone" aria-label="Guidelines PDF drop zone">
+                        <span class="drop-text">Drag and drop WHO mhGAP PDF guidelines here or click to browse</span>
+                        <input type="file" id="pdf-file-input" accept=".pdf" class="hidden" aria-label="Upload PDF file">
+                    </div>
+                    
+                    <!-- Progress Bar -->
+                    <div id="ingest-progress-container" class="ingest-progress-container hidden" aria-label="Ingestion Progress">
+                        <div class="progress-info">
+                            <span id="ingest-filename">Parsing document...</span>
+                            <span id="ingest-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar-track">
+                            <div class="progress-bar-fill" id="ingest-bar-fill"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Guidelines Table -->
+                    <div class="corpus-table-container">
+                        <h3>Indexed Guidelines</h3>
+                        <table class="data-table" role="grid">
+                            <thead>
+                                <tr role="row">
+                                    <th role="columnheader">Document Name</th>
+                                    <th role="columnheader">mhGAP Version</th>
+                                    <th role="columnheader">Effective Date</th>
+                                    <th role="columnheader">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpus-table-body">
+                                <tr role="row"><td colspan="4" class="table-empty">No documents indexed in VectorStore.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal dialogue for resolving escalations -->
+    <div id="resolve-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <h3 id="modal-title">Resolve Clinical Escalation</h3>
+            <form id="resolve-form">
+                <input type="hidden" id="resolve-escalation-id">
+                <div class="form-group">
+                    <label for="resolution-text">Clinical Resolution Notes:</label>
+                    <textarea id="resolution-text" required aria-required="true" rows="4" placeholder="Enter resolution explanation (e.g. 'Referred clinician to WHO mhGAP suicide emergency page 87 directly.')"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save Resolution</button>
+                    <button type="button" id="btn-close-modal" class="btn btn-secondary">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script imports -->
+    <script src="/static/app.js"></script>
+</body>
+</html>

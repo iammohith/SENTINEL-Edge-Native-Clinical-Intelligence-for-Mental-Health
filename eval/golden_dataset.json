@@ -1,0 +1,452 @@
+[
+  {
+    "query": "What are the mhGAP assessment steps for moderate depression?",
+    "expected_condition_codes": ["DEP"],
+    "expected_intent": "ASSESSMENT_PROTOCOL",
+    "expected_source_section": "DEP > Assessment",
+    "expected_answer_keywords": ["PHQ-9", "2 weeks", "mood", "anhedonia", "fatigue", "sleep", "functional impairment"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the recommended pharmacological treatment for depression in adults?",
+    "expected_condition_codes": ["DEP"],
+    "expected_intent": "TREATMENT_PROTOCOL",
+    "expected_source_section": "DEP > Treatment",
+    "expected_answer_keywords": ["antidepressant", "fluoxetine", "amitriptyline", "treatment", "adults"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How do I prescribe amitriptyline for depression, and what is the starting dose?",
+    "expected_condition_codes": ["DEP"],
+    "expected_intent": "MEDICATION_GUIDANCE",
+    "expected_source_section": "DEP > Treatment > Pharmacological",
+    "expected_answer_keywords": ["amitriptyline", "dose", "mg", "starting", "bedtime", "side effects"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "When should a depressed patient be referred to a mental health specialist?",
+    "expected_condition_codes": ["DEP"],
+    "expected_intent": "REFERRAL_CRITERIA",
+    "expected_source_section": "DEP > Referral",
+    "expected_answer_keywords": ["referral", "specialist", "refractory", "suicide", "psychosis", "severe"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How often should we follow up with a patient diagnosed with depression?",
+    "expected_condition_codes": ["DEP"],
+    "expected_intent": "FOLLOW_UP_PROTOCOL",
+    "expected_source_section": "DEP > Follow-up",
+    "expected_answer_keywords": ["follow-up", "monitoring", "weeks", "compliance", "response"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How to assess if someone is experiencing an episode of acute psychosis?",
+    "expected_condition_codes": ["PSY"],
+    "expected_intent": "ASSESSMENT_PROTOCOL",
+    "expected_source_section": "PSY > Assessment",
+    "expected_answer_keywords": ["hallucinations", "delusions", "disorganized behavior", "voices", "assessment"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the first-line treatment for a patient with acute psychosis according to mhGAP?",
+    "expected_condition_codes": ["PSY"],
+    "expected_intent": "TREATMENT_PROTOCOL",
+    "expected_source_section": "PSY > Treatment",
+    "expected_answer_keywords": ["haloperidol", "risperidone", "antipsychotic", "psychosocial support"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the recommended dose of haloperidol for psychosis, and what are its side effects?",
+    "expected_condition_codes": ["PSY"],
+    "expected_intent": "MEDICATION_GUIDANCE",
+    "expected_source_section": "PSY > Treatment > Pharmacological",
+    "expected_answer_keywords": ["haloperidol", "dose", "mg", "extrapyramidal", "side effects", "tardive dyskinesia"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What are the specialist referral criteria for a patient with chronic psychosis?",
+    "expected_condition_codes": ["PSY"],
+    "expected_intent": "REFERRAL_CRITERIA",
+    "expected_source_section": "PSY > Referral",
+    "expected_answer_keywords": ["referral", "specialist", "refractory", "intolerable side effects", "pregnancy"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the follow-up protocol for a patient with psychosis who is stable on medication?",
+    "expected_condition_codes": ["PSY"],
+    "expected_intent": "FOLLOW_UP_PROTOCOL",
+    "expected_source_section": "PSY > Follow-up",
+    "expected_answer_keywords": ["follow-up", "monitoring", "compliance", "relapse", "side effects"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How should I assess a patient presenting with suspected harmful use of alcohol?",
+    "expected_condition_codes": ["SUD"],
+    "expected_intent": "ASSESSMENT_PROTOCOL",
+    "expected_source_section": "SUD > Assessment",
+    "expected_answer_keywords": ["alcohol", "drinking", "harmful use", "dependence", "withdrawal", "assessment"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the pharmacological treatment for alcohol withdrawal syndrome?",
+    "expected_condition_codes": ["SUD"],
+    "expected_intent": "TREATMENT_PROTOCOL",
+    "expected_source_section": "SUD > Treatment > Withdrawal",
+    "expected_answer_keywords": ["diazepam", "withdrawal", "seizure", "supportive care", "detoxification"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How do I manage opioid overdose in emergency primary care settings?",
+    "expected_condition_codes": ["SUD"],
+    "expected_intent": "TREATMENT_PROTOCOL",
+    "expected_source_section": "SUD > Treatment > Overdose",
+    "expected_answer_keywords": ["naloxone", "opioid", "overdose", "airway", "breathing"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What are the side effects and contraindications of diazepam for alcohol withdrawal?",
+    "expected_condition_codes": ["SUD"],
+    "expected_intent": "MEDICATION_GUIDANCE",
+    "expected_source_section": "SUD > Treatment > Pharmacological",
+    "expected_answer_keywords": ["diazepam", "drowsiness", "dependence", "respiratory depression", "contraindications"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "When should a patient with substance use disorder be referred to a specialized facility?",
+    "expected_condition_codes": ["SUD"],
+    "expected_intent": "REFERRAL_CRITERIA",
+    "expected_source_section": "SUD > Referral",
+    "expected_answer_keywords": ["referral", "specialist", "severe withdrawal", "comorbidity", "refractory"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What are the clinical steps to assess a patient presenting with a convulsive seizure?",
+    "expected_condition_codes": ["EPI"],
+    "expected_intent": "ASSESSMENT_PROTOCOL",
+    "expected_source_section": "EPI > Assessment",
+    "expected_answer_keywords": ["seizure", "convulsive", "consciousness", "tongue biting", "incontinence", "post-ictal"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the first-line pharmacological treatment for a child having an active convulsion?",
+    "expected_condition_codes": ["EPI"],
+    "expected_intent": "TREATMENT_PROTOCOL",
+    "expected_source_section": "EPI > Treatment > Emergency",
+    "expected_answer_keywords": ["diazepam", "intravenous", "rectal", "active convulsion", "airway"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How should phenobarbital be initiated for a new diagnosis of epilepsy?",
+    "expected_condition_codes": ["EPI"],
+    "expected_intent": "MEDICATION_GUIDANCE",
+    "expected_source_section": "EPI > Treatment > Pharmacological",
+    "expected_answer_keywords": ["phenobarbital", "dose", "initiation", "mg/kg", "taper", "side effects"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What are the criteria for referring an epilepsy patient to a specialist?",
+    "expected_condition_codes": ["EPI"],
+    "expected_intent": "REFERRAL_CRITERIA",
+    "expected_source_section": "EPI > Referral",
+    "expected_answer_keywords": ["referral", "refractory", "pregnancy", "status epilepticus", "intolerable side effects"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the recommended follow-up schedule for an individual with well-controlled epilepsy?",
+    "expected_condition_codes": ["EPI"],
+    "expected_intent": "FOLLOW_UP_PROTOCOL",
+    "expected_source_section": "EPI > Follow-up",
+    "expected_answer_keywords": ["follow-up", "seizure-free", "compliance", "blood levels", "monitoring"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How should a primary care provider assess an older adult with suspected dementia?",
+    "expected_condition_codes": ["DEM"],
+    "expected_intent": "ASSESSMENT_PROTOCOL",
+    "expected_source_section": "DEM > Assessment",
+    "expected_answer_keywords": ["cognitive impairment", "memory loss", "onset", "orientation", "functioning", "assessment"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What non-pharmacological interventions are recommended for managing dementia behavioral symptoms?",
+    "expected_condition_codes": ["DEM"],
+    "expected_intent": "TREATMENT_PROTOCOL",
+    "expected_source_section": "DEM > Treatment > Non-Pharmacological",
+    "expected_answer_keywords": ["carer support", "routine", "reassurance", "physical exercise", "cognitive stimulation"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "Can haloperidol be used to manage behavioral symptoms of dementia, and what is the warning?",
+    "expected_condition_codes": ["DEM"],
+    "expected_intent": "MEDICATION_GUIDANCE",
+    "expected_source_section": "DEM > Treatment > Pharmacological",
+    "expected_answer_keywords": ["haloperidol", "behavioral symptoms", "avoid", "risk", "mortality", "short-term only"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "Under what circumstances should a patient with dementia be referred to secondary care?",
+    "expected_condition_codes": ["DEM"],
+    "expected_intent": "REFERRAL_CRITERIA",
+    "expected_source_section": "DEM > Referral",
+    "expected_answer_keywords": ["referral", "severe behavioral symptoms", "atypical presentation", "complications"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the follow-up frequency and protocol for a patient living with dementia?",
+    "expected_condition_codes": ["DEM"],
+    "expected_intent": "FOLLOW_UP_PROTOCOL",
+    "expected_source_section": "DEM > Follow-up",
+    "expected_answer_keywords": ["follow-up", "carer burden", "cognitive decline", "safety", "re-assessment"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How do I assess a child presenting with suspected developmental delay or autism?",
+    "expected_condition_codes": ["DLD"],
+    "expected_intent": "ASSESSMENT_PROTOCOL",
+    "expected_source_section": "DLD > Assessment",
+    "expected_answer_keywords": ["milestones", "communication", "social interaction", "behavior", "school functioning"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What behavioral interventions are recommended for ADHD in school-aged children?",
+    "expected_condition_codes": ["DLD"],
+    "expected_intent": "TREATMENT_PROTOCOL",
+    "expected_source_section": "DLD > Treatment > Behavioral",
+    "expected_answer_keywords": ["parent training", "classroom management", "behavior modification", "structure"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the mhGAP position on prescribing methylphenidate for ADHD in primary care?",
+    "expected_condition_codes": ["DLD"],
+    "expected_intent": "MEDICATION_GUIDANCE",
+    "expected_source_section": "DLD > Treatment > Pharmacological",
+    "expected_answer_keywords": ["methylphenidate", "specialist supervision", "ADHD", "stimulant", "side effects"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "When should a child with a developmental disorder be referred to a pediatrician?",
+    "expected_condition_codes": ["DLD"],
+    "expected_intent": "REFERRAL_CRITERIA",
+    "expected_source_section": "DLD > Referral",
+    "expected_answer_keywords": ["referral", "regression", "severe behavioral issues", "no response to intervention", "specialist"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How should we follow up with families of children with intellectual disabilities?",
+    "expected_condition_codes": ["DLD"],
+    "expected_intent": "FOLLOW_UP_PROTOCOL",
+    "expected_source_section": "DLD > Follow-up",
+    "expected_answer_keywords": ["follow-up", "parental stress", "school progress", "support services"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How to assess a patient presenting with self-harm or suicide risk?",
+    "expected_condition_codes": ["SHI"],
+    "expected_intent": "ASSESSMENT_PROTOCOL",
+    "expected_source_section": "SHI > Assessment",
+    "expected_answer_keywords": ["suicidal intent", "thoughts of self-harm", "lethality of method", "protective factors"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What are the immediate clinical interventions for someone who has ingested pesticide?",
+    "expected_condition_codes": ["SHI"],
+    "expected_intent": "TREATMENT_PROTOCOL",
+    "expected_source_section": "SHI > Treatment > Emergency",
+    "expected_answer_keywords": ["pesticide ingestion", "medical emergency", "decontamination", "emergency care", "antidote"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the protocol for emergency referral of a patient with active suicidal ideation?",
+    "expected_condition_codes": ["SHI"],
+    "expected_intent": "REFERRAL_CRITERIA",
+    "expected_source_section": "SHI > Referral",
+    "expected_answer_keywords": ["emergency referral", "suicidal risk", "safety plan", "psychiatric specialist"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What support should be provided to families after a patient's self-harm attempt?",
+    "expected_condition_codes": ["SHI"],
+    "expected_intent": "FOLLOW_UP_PROTOCOL",
+    "expected_source_section": "SHI > Follow-up",
+    "expected_answer_keywords": ["family support", "safety plan", "reduce access to means", "monitoring"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How to assess for other significant mental health conditions in primary care?",
+    "expected_condition_codes": ["OTH"],
+    "expected_intent": "ASSESSMENT_PROTOCOL",
+    "expected_source_section": "OTH > Assessment",
+    "expected_answer_keywords": ["unexplained somatic complaints", "distress", "functioning impairment", "assessment"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What are the general principles of managing unexplained somatic complaints?",
+    "expected_condition_codes": ["OTH"],
+    "expected_intent": "TREATMENT_PROTOCOL",
+    "expected_source_section": "OTH > Treatment",
+    "expected_answer_keywords": ["validation", "non-pharmacological", "avoid unnecessary tests", "reassurance"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "When should a patient with medically unexplained somatic symptoms be referred?",
+    "expected_condition_codes": ["OTH"],
+    "expected_intent": "REFERRAL_CRITERIA",
+    "expected_source_section": "OTH > Referral",
+    "expected_answer_keywords": ["referral", "worsening symptoms", "comorbid conditions", "diagnostic uncertainty"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What are the general principles of clinical communication with patients and carers?",
+    "expected_condition_codes": ["GEN"],
+    "expected_intent": "CONDITION_OVERVIEW",
+    "expected_source_section": "GEN > Communication",
+    "expected_answer_keywords": ["active listening", "respect", "privacy", "empathy", "clear language"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How to establish a respectful and non-judgmental environment in mental health consultation?",
+    "expected_condition_codes": ["GEN"],
+    "expected_intent": "CONDITION_OVERVIEW",
+    "expected_source_section": "GEN > Environment",
+    "expected_answer_keywords": ["privacy", "confidentiality", "dignity", "respectful communication"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What are the key elements of promoting mental health and well-being in the community?",
+    "expected_condition_codes": ["GEN"],
+    "expected_intent": "CONDITION_OVERVIEW",
+    "expected_source_section": "GEN > Promotion",
+    "expected_answer_keywords": ["stigma reduction", "community support", "healthy habits", "psychoeducation"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How to manage a patient with comorbid depression and harmful alcohol use?",
+    "expected_condition_codes": ["DEP", "SUD"],
+    "expected_intent": "CONTRADICTION_CHECK",
+    "expected_source_section": "CONTRADICTION",
+    "expected_answer_keywords": ["comorbidity", "alcohol use", "depression", "priority", "pharmacological interactions"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "Can I prescribe amitriptyline to a patient who is currently taking phenobarbital for epilepsy?",
+    "expected_condition_codes": ["DEP", "EPI"],
+    "expected_intent": "CONTRADICTION_CHECK",
+    "expected_source_section": "CONTRADICTION",
+    "expected_answer_keywords": ["interaction", "phenobarbital", "amitriptyline", "seizure threshold", "clearance"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What are the treatment steps if a patient with psychosis is also showing signs of severe depression?",
+    "expected_condition_codes": ["PSY", "DEP"],
+    "expected_intent": "CONTRADICTION_CHECK",
+    "expected_source_section": "CONTRADICTION",
+    "expected_answer_keywords": ["comorbidity", "psychosis", "depression", "antipsychotic", "antidepressant", "risk assessment"],
+    "should_escalate": false,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the surgical procedure for removing a brain tumor causing seizures?",
+    "expected_condition_codes": ["EPI"],
+    "expected_intent": "OUT_OF_SCOPE",
+    "expected_source_section": "OUT_OF_SCOPE",
+    "expected_answer_keywords": ["out of scope", "surgical", "tumor", "neurosurgery", "specialist"],
+    "should_escalate": true,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How do I diagnose schizophrenia using a blood test or brain scan?",
+    "expected_condition_codes": ["PSY"],
+    "expected_intent": "OUT_OF_SCOPE",
+    "expected_source_section": "OUT_OF_SCOPE",
+    "expected_answer_keywords": ["out of scope", "blood test", "brain scan", "laboratory", "neuroimaging"],
+    "should_escalate": true,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What is the dose of ibuprofen for treating an acute tension headache?",
+    "expected_condition_codes": ["OTH"],
+    "expected_intent": "OUT_OF_SCOPE",
+    "expected_source_section": "OUT_OF_SCOPE",
+    "expected_answer_keywords": ["out of scope", "ibuprofen", "tension headache", "pain management"],
+    "should_escalate": true,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "Can a clinician give advice on financial investment to a patient's caregiver?",
+    "expected_condition_codes": ["GEN"],
+    "expected_intent": "OUT_OF_SCOPE",
+    "expected_source_section": "OUT_OF_SCOPE",
+    "expected_answer_keywords": ["out of scope", "financial", "investment", "caregiver advice"],
+    "should_escalate": true,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "What are the diagnostic criteria for COVID-19 in a patient presenting with a cough?",
+    "expected_condition_codes": ["GEN"],
+    "expected_intent": "OUT_OF_SCOPE",
+    "expected_source_section": "OUT_OF_SCOPE",
+    "expected_answer_keywords": ["out of scope", "COVID-19", "diagnostic criteria", "viral infection"],
+    "should_escalate": true,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How to treat malaria in a child presenting with high fever and convulsions?",
+    "expected_condition_codes": ["EPI"],
+    "expected_intent": "OUT_OF_SCOPE",
+    "expected_source_section": "OUT_OF_SCOPE",
+    "expected_answer_keywords": ["out of scope", "malaria", "fever", "convulsions", "pediatric infection"],
+    "should_escalate": true,
+    "crisis_level_expected": "NONE"
+  },
+  {
+    "query": "How to perform an emergency appendectomy in rural health centers?",
+    "expected_condition_codes": ["GEN"],
+    "expected_intent": "OUT_OF_SCOPE",
+    "expected_source_section": "OUT_OF_SCOPE",
+    "expected_answer_keywords": ["out of scope", "appendectomy", "surgical intervention", "emergency surgery"],
+    "should_escalate": true,
+    "crisis_level_expected": "NONE"
+  }
+]
