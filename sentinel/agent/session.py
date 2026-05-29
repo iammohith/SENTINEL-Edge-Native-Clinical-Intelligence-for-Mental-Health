@@ -68,7 +68,6 @@ class SessionContextManager:
 
     def get_session(self, session_id: str) -> SessionContext:
         """Retrieves or creates a session context."""
-        import threading
         with self._lock:
             # First, clean expired sessions
             self.clean_expired_sessions()
@@ -80,7 +79,6 @@ class SessionContextManager:
 
     def clear_session(self, session_id: str) -> None:
         """Explicitly deletes a session's history."""
-        import threading
         with self._lock:
             if session_id in self._sessions:
                 del self._sessions[session_id]
@@ -97,4 +95,3 @@ class SessionContextManager:
 
 # Singleton instance
 session_manager = SessionContextManager()
-import threading  # Ensure imported in module namespace

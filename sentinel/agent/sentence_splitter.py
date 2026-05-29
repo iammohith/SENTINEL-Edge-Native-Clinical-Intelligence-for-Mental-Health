@@ -20,13 +20,11 @@ CLINICAL_ABBREVIATIONS = {
     "tab", "cap", "mcg", "inj", "i.m", "i.v", "p.o", "amp", "min"
 }
 
-# Track if nltk punkt resources are downloaded
-_nltk_punkt_loaded = False
 
 
 def _init_nltk_tokenizer() -> nltk.tokenize.punkt.PunktSentenceTokenizer:
     """Initializes and configures the NLTK Punkt tokenizer with clinical abbreviations."""
-    global _nltk_punkt_loaded
+    global _nltk_loaded
     if not _nltk_loaded:
         try:
             # Check/download NLTK resources

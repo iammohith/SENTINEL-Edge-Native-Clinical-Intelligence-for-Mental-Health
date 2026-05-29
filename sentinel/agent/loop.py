@@ -25,6 +25,7 @@ from sentinel.config import (
     LLM_MODEL,
     MAX_LOOP_ITERATIONS,
     CONFIDENCE_ESCALATE_THRESHOLD,
+    MHIntentType,
 )
 from sentinel.safety.clinical_alerts import validate_clinical_alerts
 from sentinel.safety.crisis_detector import detect_crisis
@@ -129,7 +130,7 @@ async def run_clinical_query(
         return
 
     # Check for Out of Scope intent
-    if classification.intent == "OUT_OF_SCOPE":
+    if classification.intent == MHIntentType.OUT_OF_SCOPE:
         esc_id = escalate_query(session_id, scrubbed_query, "OUT_OF_SCOPE_QUERY")
         yield {"step": "SYNTHESIS", "status": "STREAM_START", "escalation_id": esc_id}
         yield {"token": f"⛔ OUT OF SCOPE (ID: {esc_id})\nThis query is outside the clinical domain of the WHO mhGAP Intervention Guide. Sentinel cannot provide answers for non-clinical or out-of-scope topics."}

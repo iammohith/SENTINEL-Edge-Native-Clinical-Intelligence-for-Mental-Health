@@ -11,7 +11,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import threading
-from typing import Any
+from typing import Any, Optional
 
 from sentence_transformers import CrossEncoder
 
@@ -29,7 +29,6 @@ def _get_reranker() -> CrossEncoder:
     """Thread-safe lazy initializer for the reranker model."""
     global _reranker_model
     if _reranker_model is None:
-        import threading
         with _model_lock:
             if _reranker_model is None:
                 logger.info("Loading CrossEncoder reranker model (cross-encoder/ms-marco-MiniLM-L-6-v2)...")
