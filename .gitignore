@@ -30,3 +30,6 @@ audit_logs/*.db-shm
 # Local test databases
 test_temp_db/
 
+# Evaluation runs
+eval/eval_run.log
+
